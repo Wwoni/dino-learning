@@ -156,7 +156,7 @@ export default function KoreanPage() {
             {q.hint && <p className="text-lg text-gray-400 tracking-widest">{q.hint}</p>}
             <WritingCanvas
               key={q.id}
-              guideText={q.type === "trace" ? q.answer : q.answer}
+              guideText={q.answer}
               onComplete={() => handleAnswer(true)}
               lang="ko"
             />

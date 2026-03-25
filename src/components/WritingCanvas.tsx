@@ -12,6 +12,9 @@ export default function WritingCanvas({ guideText, onComplete, lang = "ko" }: Pr
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawn, setHasDrawn] = useState(false);
+  const strokeCount = useRef(0);
+  const totalDistance = useRef(0);
+  const lastPos = useRef<{ x: number; y: number } | null>(null);
 
   const getCtx = useCallback(() => {
     const canvas = canvasRef.current;
@@ -81,7 +84,9 @@ export default function WritingCanvas({ guideText, onComplete, lang = "ko" }: Pr
     if (!ctx) return;
     setIsDrawing(true);
     setHasDrawn(true);
+    strokeCount.current += 1;
     const pos = getPos(e);
+    lastPos.current = pos;
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
     ctx.strokeStyle = "#1e40af";
@@ -96,6 +101,12 @@ export default function WritingCanvas({ guideText, onComplete, lang = "ko" }: Pr
     const ctx = getCtx();
     if (!ctx) return;
     const pos = getPos(e);
+    if (lastPos.current) {
+      const dx = pos.x - lastPos.current.x;
+      const dy = pos.y - lastPos.current.y;
+      totalDistance.current += Math.sqrt(dx * dx + dy * dy);
+    }
+    lastPos.current = pos;
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
   }
@@ -112,9 +123,21 @@ export default function WritingCanvas({ guideText, onComplete, lang = "ko" }: Pr
     const rect = canvas.getBoundingClientRect();
     drawGuide(ctx, rect.width, rect.height);
     setHasDrawn(false);
+    strokeCount.current = 0;
+    totalDistance.current = 0;
+    lastPos.current = null;
+    setTooShort(false);
   }
 
+  const [tooShort, setTooShort] = useState(false);
+
   function handleSubmit() {
+    // 최소 검증: 획 1개 이상 + 총 이동거리 50px 이상
+    if (strokeCount.current < 1 || totalDistance.current < 50) {
+      setTooShort(true);
+      setTimeout(() => setTooShort(false), 1500);
+      return;
+    }
     onComplete(guideText);
   }
 
@@ -131,6 +154,9 @@ export default function WritingCanvas({ guideText, onComplete, lang = "ko" }: Pr
         onTouchMove={draw}
         onTouchEnd={endDraw}
       />
+      {tooShort && (
+        <p className="text-orange-500 font-bold text-sm shake">조금 더 써보자! ✏️</p>
+      )}
       <div className="flex gap-3">
         <button
           onClick={clearCanvas}

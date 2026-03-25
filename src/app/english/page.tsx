@@ -1,41 +1,38 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { ENGLISH_QUESTIONS, type EnglishQuestion } from "@/data/english";
-import { getProgress, addExp } from "@/lib/progress";
+import { useState, useCallback } from "react";
+import { ENGLISH_LESSONS, type EnglishLesson } from "@/data/lessons/english";
+import { addExp } from "@/lib/progress";
 import { speakEnglish } from "@/lib/tts";
 import WritingCanvas from "@/components/WritingCanvas";
 import QuizCard from "@/components/QuizCard";
 import StarBar from "@/components/StarBar";
+import LessonSelector from "@/components/LessonSelector";
+import StoryIntro from "@/components/StoryIntro";
 
 export default function EnglishPage() {
-  const [level, setLevel] = useState(1);
-  const [questions, setQuestions] = useState<EnglishQuestion[]>([]);
+  const [lessonId, setLessonId] = useState(1);
+  const [phase, setPhase] = useState<"select" | "story" | "quiz" | "result">("select");
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [showResult, setShowResult] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  useEffect(() => {
-    const p = getProgress();
-    setLevel(p.english.level);
-  }, []);
-
-  useEffect(() => {
-    const filtered = ENGLISH_QUESTIONS.filter((q) => q.level === level);
-    const shuffled = [...filtered].sort(() => Math.random() - 0.5).slice(0, 10);
-    setQuestions(shuffled);
-    setCurrent(0);
-    setScore(0);
-    setTotal(0);
-    setShowResult(false);
-  }, [level]);
-
+  const lesson = ENGLISH_LESSONS.find((l) => l.id === lessonId)!;
+  const questions = lesson?.questions || [];
   const q = questions[current];
 
+  function startLesson(id: number) {
+    setLessonId(id);
+    setPhase("story");
+    setCurrent(0);
+    setScore(0);
+  }
+
+  function beginQuiz() {
+    setPhase("quiz");
+  }
+
   const handleAnswer = useCallback((correct: boolean) => {
-    setTotal((t) => t + 1);
     if (correct) {
       setScore((s) => s + 1);
       setFeedback("Great job! 🎉");
@@ -43,15 +40,14 @@ export default function EnglishPage() {
       setFeedback("Try again! 💪");
     }
     if (q) addExp("english", q.id, correct);
-
     setTimeout(() => {
       setFeedback(null);
       if (current + 1 < questions.length) {
         setCurrent((c) => c + 1);
       } else {
-        setShowResult(true);
+        setPhase("result");
       }
-    }, 1200);
+    }, 1000);
   }, [current, questions.length, q]);
 
   function handleSpeak() {
@@ -59,58 +55,102 @@ export default function EnglishPage() {
     else if (q) speakEnglish(q.prompt);
   }
 
-  if (!q && !showResult) {
-    return <div className="text-center py-12"><p className="text-xl text-gray-500">Loading questions...</p></div>;
-  }
-
-  if (showResult) {
+  // === 레슨 선택 화면 ===
+  if (phase === "select") {
     return (
-      <div className="flex flex-col items-center gap-6 py-12">
-        <div className="text-7xl pop">🏆</div>
-        <h2 className="text-3xl font-black text-purple-700">English Complete!</h2>
-        <p className="text-xl text-gray-600">
-          {total}문제 중 <span className="text-purple-600 font-bold">{score}개</span> 맞았어요!
-        </p>
-        <div className="flex gap-3">
-          <button
-            onClick={() => { setCurrent(0); setScore(0); setTotal(0); setShowResult(false); }}
-            className="px-6 py-3 bg-purple-500 text-white rounded-2xl font-bold text-lg hover:bg-purple-600"
-          >
-            다시 풀기
-          </button>
-          <a href="/" className="px-6 py-3 bg-gray-200 rounded-2xl font-bold text-lg hover:bg-gray-300">
-            홈으로
-          </a>
+      <div className="flex flex-col gap-5">
+        <div className="text-center py-4">
+          <h1 className="text-3xl font-black text-purple-700">🔤 영어 학습</h1>
+          <p className="text-gray-500 mt-1">레슨을 골라봐!</p>
+        </div>
+        <LessonSelector
+          lessons={ENGLISH_LESSONS}
+          currentLesson={lessonId}
+          onSelect={startLesson}
+          color="purple"
+        />
+        <div className="bg-white rounded-2xl p-4 shadow">
+          <h3 className="font-bold text-gray-700">Lesson {lesson.id}: {lesson.title}</h3>
+          <p className="text-sm text-gray-500">{lesson.topic}</p>
         </div>
       </div>
     );
   }
 
+  // === 스토리 도입 ===
+  if (phase === "story") {
+    return (
+      <div className="flex flex-col gap-4">
+        <button onClick={() => setPhase("select")} className="self-start text-gray-400 hover:text-gray-600">
+          ← 레슨 목록
+        </button>
+        <StoryIntro
+          title={`Lesson ${lesson.id}: ${lesson.title}`}
+          topic={lesson.topic}
+          story={lesson.story}
+          dinoId={lesson.dino}
+          onStart={beginQuiz}
+          color="purple"
+        />
+        {lesson.storyEn && (
+          <div className="bg-purple-50 border border-purple-200 rounded-2xl p-4 text-center">
+            <p className="text-base text-purple-800 italic">{lesson.storyEn}</p>
+            <button
+              onClick={() => speakEnglish(lesson.storyEn)}
+              className="mt-2 px-4 py-2 bg-purple-400 text-white rounded-xl font-bold text-sm hover:bg-purple-500 transition"
+            >
+              🔊 Listen
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // === 결과 화면 ===
+  if (phase === "result") {
+    return (
+      <div className="flex flex-col items-center gap-6 py-12">
+        <div className="text-7xl pop">🏆</div>
+        <h2 className="text-3xl font-black text-purple-700">Lesson {lesson.id} Complete!</h2>
+        <p className="text-xl text-gray-600">
+          {questions.length}문제 중 <span className="text-purple-600 font-bold">{score}개</span> 맞았어요!
+        </p>
+        <div className="flex gap-3">
+          <button onClick={() => { setCurrent(0); setScore(0); setPhase("quiz"); }}
+            className="px-6 py-3 bg-purple-500 text-white rounded-2xl font-bold hover:bg-purple-600">
+            다시 풀기
+          </button>
+          {lessonId < ENGLISH_LESSONS.length && (
+            <button onClick={() => startLesson(lessonId + 1)}
+              className="px-6 py-3 bg-green-500 text-white rounded-2xl font-bold hover:bg-green-600">
+              다음 레슨 →
+            </button>
+          )}
+          <button onClick={() => setPhase("select")}
+            className="px-6 py-3 bg-gray-200 rounded-2xl font-bold hover:bg-gray-300">
+            목록으로
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // === 퀴즈 화면 ===
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <div className="flex gap-2">
-          {[1, 2, 3].map((l) => (
-            <button
-              key={l}
-              onClick={() => setLevel(l)}
-              className={`px-4 py-2 rounded-xl font-bold text-sm transition ${
-                level === l ? "bg-purple-500 text-white" : "bg-white text-gray-500 border"
-              }`}
-            >
-              Lv.{l}
-            </button>
-          ))}
-        </div>
+        <button onClick={() => setPhase("select")} className="text-gray-400 hover:text-gray-600 text-sm">
+          ← 목록
+        </button>
+        <span className="text-sm font-bold text-purple-600">Lesson {lesson.id}</span>
         <span className="text-sm text-gray-400">{current + 1} / {questions.length}</span>
       </div>
 
-      <StarBar current={score} total={questions.length} label="영어 학습" />
+      <StarBar current={score} total={questions.length} label={lesson.title} />
 
       {feedback && (
-        <div className={`text-center text-2xl font-black pop ${
-          feedback.includes("Great") ? "text-green-500" : "text-orange-500"
-        }`}>
+        <div className={`text-center text-2xl font-black pop ${feedback.includes("Great") ? "text-green-500" : "text-orange-500"}`}>
           {feedback}
         </div>
       )}
@@ -128,10 +168,25 @@ export default function EnglishPage() {
 
         {q.type === "listen" && q.choices && (
           <div className="flex flex-col items-center gap-4">
-            <div className="text-7xl mb-2">{q.image}</div>
+            {q.image && <div className="text-7xl mb-2">{q.image}</div>}
             <p className="text-lg text-gray-500">{q.korean}</p>
             <QuizCard
+              key={q.id}
               question="듣고 맞는 단어를 골라봐!"
+              choices={q.choices}
+              correctAnswer={q.answer}
+              onAnswer={handleAnswer}
+            />
+          </div>
+        )}
+
+        {q.type === "alphabet" && q.choices && (
+          <div className="flex flex-col items-center gap-4">
+            {q.image && <div className="text-7xl mb-2">{q.image}</div>}
+            <p className="text-lg text-gray-500">{q.korean}</p>
+            <QuizCard
+              key={q.id}
+              question={q.prompt}
               choices={q.choices}
               correctAnswer={q.answer}
               onAnswer={handleAnswer}
@@ -141,17 +196,18 @@ export default function EnglishPage() {
 
         {q.type === "trace" && (
           <div className="flex flex-col items-center gap-4">
-            <div className="text-6xl mb-2">{q.image}</div>
+            {q.image && <div className="text-6xl mb-2">{q.image}</div>}
             <p className="text-2xl font-bold text-gray-700">
               &ldquo;{q.prompt}&rdquo; 따라 써보자!
             </p>
             {q.korean && <p className="text-lg text-gray-400">{q.korean}</p>}
-            <WritingCanvas guideText={q.answer} onComplete={() => handleAnswer(true)} lang="en" />
+            <WritingCanvas key={q.id} guideText={q.answer} onComplete={() => handleAnswer(true)} lang="en" />
           </div>
         )}
 
         {q.type === "word" && q.choices && (
           <QuizCard
+            key={q.id}
             question={q.prompt}
             image={q.image}
             choices={q.choices}
@@ -162,11 +218,11 @@ export default function EnglishPage() {
 
         {q.type === "sentence" && (
           <div className="flex flex-col items-center gap-4">
-            <div className="text-6xl mb-2">{q.image}</div>
+            {q.image && <div className="text-6xl mb-2">{q.image}</div>}
             <p className="text-2xl font-bold text-center text-gray-800">{q.prompt}</p>
             <p className="text-lg text-gray-400">{q.korean}</p>
             <p className="text-sm text-gray-400 mt-2">소리를 듣고 따라 써보세요!</p>
-            <WritingCanvas guideText={q.answer} onComplete={() => handleAnswer(true)} lang="en" />
+            <WritingCanvas key={q.id} guideText={q.answer} onComplete={() => handleAnswer(true)} lang="en" />
           </div>
         )}
       </div>
