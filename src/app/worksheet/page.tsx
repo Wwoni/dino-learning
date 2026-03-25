@@ -35,151 +35,161 @@ const ENGLISH_TRACE_WORDS = [
   { word: "BIRD", emoji: "🐦" },
 ];
 
+function buildWorksheetHTML(type: WorksheetType): string {
+  const style = `
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'Noto Sans KR', sans-serif; padding: 20mm; color: #333; }
+      h1 { font-size: 22px; text-align: center; margin-bottom: 8px; }
+      .info { font-size: 11px; text-align: center; margin-bottom: 16px; color: #888; }
+      hr { border: none; border-top: 1px solid #ddd; margin: 12px 0; }
+      .row { display: flex; align-items: center; gap: 12px; margin: 10px 0; padding: 8px 0; }
+      .num { font-size: 14px; font-weight: bold; width: 24px; text-align: right; }
+      .emoji { font-size: 24px; }
+      .guide { font-size: 22px; color: #ccc; font-weight: bold; width: 120px; text-align: center; }
+      .blank { border-bottom: 2px dashed #aaa; width: 120px; height: 30px; }
+      .problem { font-size: 20px; font-weight: bold; }
+      .hint { font-size: 8px; color: #ddd; margin-left: 8px; }
+      .section-title { font-size: 15px; font-weight: bold; margin-bottom: 12px; color: #555; }
+    </style>
+  `;
+
+  let body = "";
+
+  if (type === "korean-trace") {
+    body = `<h1>🦕 탐험대장 워크시트</h1>
+      <div class="info">이름: ________________&nbsp;&nbsp;&nbsp;&nbsp;날짜: ____년 ____월 ____일</div><hr>
+      <div class="section-title">한글 따라쓰기 - 단어를 보고 따라 써보세요!</div>`;
+    KOREAN_TRACE_WORDS.forEach((item, i) => {
+      body += `<div class="row">
+        <span class="num">${i + 1}.</span>
+        <span class="emoji">${item.emoji}</span>
+        <span class="guide">${item.word}</span>
+        <span class="blank"></span>
+      </div>`;
+    });
+  }
+
+  if (type === "korean-dictation") {
+    const words = ["티라노", "기린", "소방차", "악어", "경찰차", "원숭이", "공룡알", "화석", "코끼리", "트럭"];
+    body = `<h1>🦕 탐험대장 워크시트</h1>
+      <div class="info">이름: ________________&nbsp;&nbsp;&nbsp;&nbsp;날짜: ____년 ____월 ____일</div><hr>
+      <div class="section-title">한글 받아쓰기 - 소리를 듣고 써보세요!</div>`;
+    words.forEach((word, i) => {
+      body += `<div class="row">
+        <span class="num">${i + 1}.</span>
+        <span class="blank" style="width:180px;"></span>
+        <span class="hint">${word}</span>
+      </div>`;
+    });
+  }
+
+  if (type === "math-addition") {
+    const problems = [
+      { a: 2, b: 3 }, { a: 4, b: 2 }, { a: 1, b: 5 }, { a: 3, b: 4 }, { a: 5, b: 3 },
+      { a: 6, b: 2 }, { a: 4, b: 4 }, { a: 7, b: 2 }, { a: 3, b: 6 }, { a: 5, b: 5 },
+    ];
+    body = `<h1>🦕 탐험대장 워크시트</h1>
+      <div class="info">이름: ________________&nbsp;&nbsp;&nbsp;&nbsp;날짜: ____년 ____월 ____일</div><hr>
+      <div class="section-title">덧셈 연습 - 더하기를 풀어보세요!</div>`;
+    problems.forEach((p, i) => {
+      body += `<div class="row">
+        <span class="num">${i + 1}.</span>
+        <span class="problem">${p.a} + ${p.b} = ______</span>
+      </div>`;
+    });
+  }
+
+  if (type === "math-subtraction") {
+    const problems = [
+      { a: 5, b: 2 }, { a: 7, b: 3 }, { a: 8, b: 4 }, { a: 6, b: 1 }, { a: 9, b: 5 },
+      { a: 10, b: 3 }, { a: 7, b: 4 }, { a: 8, b: 6 }, { a: 9, b: 2 }, { a: 10, b: 7 },
+    ];
+    body = `<h1>🦕 탐험대장 워크시트</h1>
+      <div class="info">이름: ________________&nbsp;&nbsp;&nbsp;&nbsp;날짜: ____년 ____월 ____일</div><hr>
+      <div class="section-title">뺄셈 연습 - 빼기를 풀어보세요!</div>`;
+    problems.forEach((p, i) => {
+      body += `<div class="row">
+        <span class="num">${i + 1}.</span>
+        <span class="problem">${p.a} − ${p.b} = ______</span>
+      </div>`;
+    });
+  }
+
+  if (type === "english-trace") {
+    body = `<h1>🦕 Explorer Worksheet</h1>
+      <div class="info">Name: ________________&nbsp;&nbsp;&nbsp;&nbsp;Date: ____/____/____</div><hr>
+      <div class="section-title">English Tracing - Write the words!</div>`;
+    ENGLISH_TRACE_WORDS.forEach((item, i) => {
+      body += `<div class="row">
+        <span class="num">${i + 1}.</span>
+        <span class="emoji">${item.emoji}</span>
+        <span class="guide" style="font-family:Arial,sans-serif;">${item.word}</span>
+        <span class="blank"></span>
+      </div>`;
+    });
+  }
+
+  if (type === "english-words") {
+    const items = [
+      { emoji: "🦕", answer: "Dinosaur" }, { emoji: "🦁", answer: "Lion" },
+      { emoji: "🚗", answer: "Car" }, { emoji: "🐘", answer: "Elephant" },
+      { emoji: "🚌", answer: "Bus" }, { emoji: "🦖", answer: "T-Rex" },
+      { emoji: "🐧", answer: "Penguin" }, { emoji: "🚒", answer: "Fire truck" },
+      { emoji: "🦒", answer: "Giraffe" }, { emoji: "🐊", answer: "Alligator" },
+    ];
+    body = `<h1>🦕 Explorer Worksheet</h1>
+      <div class="info">Name: ________________&nbsp;&nbsp;&nbsp;&nbsp;Date: ____/____/____</div><hr>
+      <div class="section-title">English Quiz - Write the word for each picture!</div>`;
+    items.forEach((item, i) => {
+      body += `<div class="row">
+        <span class="num">${i + 1}.</span>
+        <span class="emoji">${item.emoji}</span>
+        <span class="blank" style="width:160px;"></span>
+        <span class="hint">${item.answer}</span>
+      </div>`;
+    });
+  }
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">${style}</head><body>${body}</body></html>`;
+}
+
 export default function WorksheetPage() {
   const [generating, setGenerating] = useState<string | null>(null);
 
   async function generatePDF(type: WorksheetType) {
     setGenerating(type);
-    // 동적 import (클라이언트 사이드에서만)
-    const { jsPDF } = await import("jspdf");
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-    const w = doc.internal.pageSize.getWidth();
+    try {
+      const html2pdf = (await import("html2pdf.js")).default;
+      const html = buildWorksheetHTML(type);
 
-    // 헤더
-    doc.setFontSize(20);
-    doc.text("🦕 탐험대장 워크시트", w / 2, 15, { align: "center" });
-    doc.setFontSize(10);
-    doc.text(`이름: ________________    날짜: ____년 ____월 ____일`, w / 2, 25, { align: "center" });
-    doc.setDrawColor(200);
-    doc.line(10, 30, w - 10, 30);
+      // 임시 컨테이너 생성
+      const container = document.createElement("div");
+      container.innerHTML = html;
+      container.style.position = "absolute";
+      container.style.left = "-9999px";
+      container.style.width = "210mm";
+      document.body.appendChild(container);
 
-    let y = 40;
+      // 폰트 로딩 대기
+      await document.fonts.ready;
 
-    if (type === "korean-trace") {
-      doc.setFontSize(14);
-      doc.text("한글 따라쓰기 - 단어를 보고 따라 써보세요!", 15, y);
-      y += 12;
-      KOREAN_TRACE_WORDS.forEach((item, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(16);
-        doc.text(`${i + 1}. ${item.emoji}`, 15, y);
-        // 가이드 글자 (연하게)
-        doc.setTextColor(200);
-        doc.setFontSize(20);
-        doc.text(item.word, 40, y);
-        doc.setTextColor(0);
-        // 쓰기 칸
-        doc.setDrawColor(180);
-        doc.setLineDashPattern([2, 2], 0);
-        doc.rect(38, y - 7, 60, 12);
-        // 빈 칸
-        doc.rect(105, y - 7, 60, 12);
-        doc.setLineDashPattern([], 0);
-        y += 22;
-      });
+      await html2pdf()
+        .set({
+          margin: 0,
+          filename: `탐험대장_${type}.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        })
+        .from(container)
+        .save();
+
+      document.body.removeChild(container);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
     }
-
-    if (type === "korean-dictation") {
-      doc.setFontSize(14);
-      doc.text("한글 받아쓰기 - 소리를 듣고 써보세요!", 15, y);
-      y += 12;
-      const words = ["티라노", "기린", "소방차", "악어", "경찰차", "원숭이", "공룡알", "화석", "코끼리", "트럭"];
-      words.forEach((word, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(14);
-        doc.text(`${i + 1}.`, 15, y);
-        doc.setDrawColor(180);
-        doc.setLineDashPattern([2, 2], 0);
-        doc.rect(25, y - 7, 80, 12);
-        doc.setLineDashPattern([], 0);
-        // 정답 (맨 아래 작게)
-        doc.setFontSize(6);
-        doc.setTextColor(220);
-        doc.text(word, 110, y);
-        doc.setTextColor(0);
-        y += 22;
-      });
-    }
-
-    if (type === "math-addition") {
-      doc.setFontSize(14);
-      doc.text("덧셈 연습 - 더하기를 풀어보세요!", 15, y);
-      y += 12;
-      const problems = [
-        { a: 2, b: 3, emoji: "🦕" }, { a: 4, b: 2, emoji: "🦁" }, { a: 1, b: 5, emoji: "🚗" },
-        { a: 3, b: 4, emoji: "🥚" }, { a: 5, b: 3, emoji: "🐧" }, { a: 6, b: 2, emoji: "🚌" },
-        { a: 4, b: 4, emoji: "🦖" }, { a: 7, b: 2, emoji: "🐘" }, { a: 3, b: 6, emoji: "🚒" },
-        { a: 5, b: 5, emoji: "🦒" },
-      ];
-      problems.forEach((p, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(18);
-        doc.text(`${i + 1}.  ${p.a}  +  ${p.b}  =  ____`, 20, y);
-        y += 18;
-      });
-    }
-
-    if (type === "math-subtraction") {
-      doc.setFontSize(14);
-      doc.text("뺄셈 연습 - 빼기를 풀어보세요!", 15, y);
-      y += 12;
-      const problems = [
-        { a: 5, b: 2 }, { a: 7, b: 3 }, { a: 8, b: 4 }, { a: 6, b: 1 }, { a: 9, b: 5 },
-        { a: 10, b: 3 }, { a: 7, b: 4 }, { a: 8, b: 6 }, { a: 9, b: 2 }, { a: 10, b: 7 },
-      ];
-      problems.forEach((p, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(18);
-        doc.text(`${i + 1}.  ${p.a}  -  ${p.b}  =  ____`, 20, y);
-        y += 18;
-      });
-    }
-
-    if (type === "english-trace") {
-      doc.setFontSize(14);
-      doc.text("English Tracing - Write the words!", 15, y);
-      y += 12;
-      ENGLISH_TRACE_WORDS.forEach((item, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(16);
-        doc.text(`${i + 1}. ${item.emoji}`, 15, y);
-        doc.setTextColor(200);
-        doc.setFontSize(20);
-        doc.text(item.word, 40, y);
-        doc.setTextColor(0);
-        doc.setDrawColor(180);
-        doc.setLineDashPattern([2, 2], 0);
-        doc.rect(38, y - 7, 60, 12);
-        doc.rect(105, y - 7, 60, 12);
-        doc.setLineDashPattern([], 0);
-        y += 22;
-      });
-    }
-
-    if (type === "english-words") {
-      doc.setFontSize(14);
-      doc.text("English Quiz - Write the word for each picture!", 15, y);
-      y += 12;
-      const items = [
-        { emoji: "🦕", answer: "Dinosaur" }, { emoji: "🦁", answer: "Lion" },
-        { emoji: "🚗", answer: "Car" }, { emoji: "🐘", answer: "Elephant" },
-        { emoji: "🚌", answer: "Bus" }, { emoji: "🦖", answer: "T-Rex" },
-        { emoji: "🐧", answer: "Penguin" }, { emoji: "🚒", answer: "Fire truck" },
-        { emoji: "🦒", answer: "Giraffe" }, { emoji: "🐊", answer: "Alligator" },
-      ];
-      items.forEach((item, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(16);
-        doc.text(`${i + 1}. ${item.emoji}  ________________`, 20, y);
-        doc.setFontSize(6);
-        doc.setTextColor(220);
-        doc.text(item.answer, 120, y);
-        doc.setTextColor(0);
-        y += 18;
-      });
-    }
-
-    doc.save(`탐험대장_${type}.pdf`);
     setGenerating(null);
   }
 
