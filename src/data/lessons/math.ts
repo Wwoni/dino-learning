@@ -1,4 +1,4 @@
-// 수학 레슨 — Lesson 1~20
+// 수학 레슨 — Lesson 1~20 (세기, 덧셈, 뺄셈, 도형, 규칙, 종합)
 
 export interface MathLesson {
   id: number;
@@ -162,6 +162,154 @@ export const MATH_LESSONS: MathLesson[] = [
       { id: "M10-3", type: "counting", prompt: "세모가 몇 개?", visual: "△△△△△ ⭕⭕ ⬜", answer: 5, choices: [3, 4, 5, 6] },
       { id: "M10-4", type: "addition", prompt: "동그라미 3개 + 네모 4개 = 모두 몇 개?", visual: "⭕⭕⭕ + ⬜⬜⬜⬜", answer: 7, choices: [5, 6, 7, 8] },
       { id: "M10-5", type: "subtraction", prompt: "도형 8개 중 세모 3개를 빼면?", visual: "8개 - △△△", answer: 5, choices: [4, 5, 6, 7] },
+    ],
+  },
+
+  // ========== 11~13: 10 넘는 덧셈 ==========
+  {
+    id: 11,
+    title: "트리케라톱스의 큰 수",
+    topic: "11~20 세기",
+    dino: "triceratops",
+    story: "트리케라톱스 떼가 모였어요!\n10보다 큰 수를 세어봐요.",
+    questions: [
+      { id: "M11-1", type: "counting", prompt: "공룡이 몇 마리?", visual: "🦕×12", answer: 12, choices: [10, 11, 12, 13] },
+      { id: "M11-2", type: "counting", prompt: "나뭇잎이 몇 개?", visual: "🍃×15", answer: 15, choices: [13, 14, 15, 16] },
+      { id: "M11-3", type: "counting", prompt: "별이 몇 개?", visual: "⭐×11", answer: 11, choices: [10, 11, 12, 13] },
+      { id: "M11-4", type: "compare", prompt: "12와 18 중 어떤 수가 더 클까요?", visual: "12 vs 18", answer: 18, choices: [12, 18] },
+      { id: "M11-5", type: "compare", prompt: "15와 11 중 어떤 수가 더 클까요?", visual: "15 vs 11", answer: 15, choices: [11, 15] },
+    ],
+  },
+  {
+    id: 12,
+    title: "브라키오의 긴 목 덧셈",
+    topic: "받아올림 없는 두 자리 덧셈",
+    dino: "brachiosaurus",
+    story: "브라키오사우루스가 높은 나무 위 열매를 세요!\n큰 수의 덧셈을 배워봐요.",
+    questions: [
+      { id: "M12-1", type: "addition", prompt: "7 + 5 = ?", visual: "🍎🍎🍎🍎🍎🍎🍎 + 🍎🍎🍎🍎🍎", answer: 12, choices: [10, 11, 12, 13] },
+      { id: "M12-2", type: "addition", prompt: "8 + 6 = ?", visual: "🥚🥚🥚🥚🥚🥚🥚🥚 + 🥚🥚🥚🥚🥚🥚", answer: 14, choices: [12, 13, 14, 15] },
+      { id: "M12-3", type: "addition", prompt: "9 + 4 = ?", visual: "🦖×9 + 🦖×4", answer: 13, choices: [11, 12, 13, 14] },
+      { id: "M12-4", type: "addition", prompt: "6 + 8 = ?", visual: "🐧×6 + 🐧×8", answer: 14, choices: [12, 13, 14, 15] },
+      { id: "M12-5", type: "addition", prompt: "9 + 9 = ?", visual: "⭐×9 + ⭐×9", answer: 18, choices: [16, 17, 18, 19] },
+    ],
+  },
+  {
+    id: 13,
+    title: "공룡 운동회 덧셈",
+    topic: "세 수 덧셈",
+    dino: "parasaurolophus",
+    story: "파라사우롤로푸스가 운동회를 열었어요!\n세 팀의 수를 더해봐요.",
+    questions: [
+      { id: "M13-1", type: "addition", prompt: "2 + 3 + 4 = ?", visual: "🦖🦖 + 🦕🦕🦕 + 🦁🦁🦁🦁", answer: 9, choices: [7, 8, 9, 10] },
+      { id: "M13-2", type: "addition", prompt: "5 + 3 + 2 = ?", visual: "🚗×5 + 🚌×3 + 🚒×2", answer: 10, choices: [8, 9, 10, 11] },
+      { id: "M13-3", type: "addition", prompt: "4 + 4 + 4 = ?", visual: "🥚×4 + 🥚×4 + 🥚×4", answer: 12, choices: [10, 11, 12, 13] },
+      { id: "M13-4", type: "addition", prompt: "1 + 6 + 3 = ?", visual: "🐧 + 🐧×6 + 🐧×3", answer: 10, choices: [8, 9, 10, 11] },
+      { id: "M13-5", type: "addition", prompt: "3 + 3 + 3 = ?", visual: "⭐×3 + ⭐×3 + ⭐×3", answer: 9, choices: [7, 8, 9, 10] },
+    ],
+  },
+
+  // ========== 14~16: 10 넘는 뺄셈 ==========
+  {
+    id: 14,
+    title: "바리오닉스의 큰 수 뺄셈",
+    topic: "10 넘는 뺄셈",
+    dino: "baryonyx",
+    story: "바리오닉스가 잡은 물고기를 나눠줘요!\n큰 수에서 빼봐요.",
+    questions: [
+      { id: "M14-1", type: "subtraction", prompt: "12 - 5 = ?", visual: "🐟×12 - 5", answer: 7, choices: [5, 6, 7, 8] },
+      { id: "M14-2", type: "subtraction", prompt: "15 - 8 = ?", visual: "🦴×15 - 8", answer: 7, choices: [6, 7, 8, 9] },
+      { id: "M14-3", type: "subtraction", prompt: "13 - 6 = ?", visual: "🍃×13 - 6", answer: 7, choices: [5, 6, 7, 8] },
+      { id: "M14-4", type: "subtraction", prompt: "11 - 4 = ?", visual: "🚗×11 - 4", answer: 7, choices: [5, 6, 7, 8] },
+      { id: "M14-5", type: "subtraction", prompt: "14 - 9 = ?", visual: "⭐×14 - 9", answer: 5, choices: [4, 5, 6, 7] },
+    ],
+  },
+  {
+    id: 15,
+    title: "케라토의 뺄셈 도전",
+    topic: "연속 뺄셈",
+    dino: "ceratosaurus",
+    story: "케라토사우루스가 열매를 하나씩 먹어요!\n연속으로 빼봐요.",
+    questions: [
+      { id: "M15-1", type: "subtraction", prompt: "10 - 3 - 2 = ?", visual: "🍎×10 - 3 - 2", answer: 5, choices: [4, 5, 6, 7] },
+      { id: "M15-2", type: "subtraction", prompt: "15 - 5 - 5 = ?", visual: "🥚×15 - 5 - 5", answer: 5, choices: [3, 4, 5, 6] },
+      { id: "M15-3", type: "subtraction", prompt: "12 - 4 - 3 = ?", visual: "🦖×12 - 4 - 3", answer: 5, choices: [4, 5, 6, 7] },
+      { id: "M15-4", type: "subtraction", prompt: "18 - 8 = ?", visual: "🐧×18 - 8", answer: 10, choices: [8, 9, 10, 11] },
+      { id: "M15-5", type: "subtraction", prompt: "16 - 7 = ?", visual: "🦴×16 - 7", answer: 9, choices: [7, 8, 9, 10] },
+    ],
+  },
+  {
+    id: 16,
+    title: "섞어 풀기 2",
+    topic: "큰 수 덧뺄셈 혼합",
+    dino: "megalosaurus",
+    story: "세계 최초 공룡 메갈로사우루스가 문제를 냈어요!\n잘 생각해서 풀어봐요.",
+    questions: [
+      { id: "M16-1", type: "addition", prompt: "8 + 7 = ?", visual: "🦖×8 + 🦖×7", answer: 15, choices: [13, 14, 15, 16] },
+      { id: "M16-2", type: "subtraction", prompt: "17 - 9 = ?", visual: "🚗×17 - 9", answer: 8, choices: [7, 8, 9, 10] },
+      { id: "M16-3", type: "addition", prompt: "6 + 9 = ?", visual: "🐘×6 + 🐘×9", answer: 15, choices: [13, 14, 15, 16] },
+      { id: "M16-4", type: "subtraction", prompt: "20 - 10 = ?", visual: "⭐×20 - 10", answer: 10, choices: [8, 9, 10, 11] },
+      { id: "M16-5", type: "addition", prompt: "9 + 8 = ?", visual: "🦁×9 + 🦁×8", answer: 17, choices: [15, 16, 17, 18] },
+    ],
+  },
+
+  // ========== 17~18: 시계·규칙 ==========
+  {
+    id: 17,
+    title: "프테라노돈의 패턴",
+    topic: "규칙 찾기",
+    dino: "pteranodon",
+    story: "프테라노돈이 하늘에서 규칙적인 무늬를 봤어요!\n다음에 올 것을 맞혀봐요.",
+    questions: [
+      { id: "M17-1", type: "counting", prompt: "1, 3, 5, 7, ? 다음 수는?", visual: "1 → 3 → 5 → 7 → ?", answer: 9, choices: [8, 9, 10, 11] },
+      { id: "M17-2", type: "counting", prompt: "2, 4, 6, 8, ? 다음 수는?", visual: "2 → 4 → 6 → 8 → ?", answer: 10, choices: [9, 10, 11, 12] },
+      { id: "M17-3", type: "counting", prompt: "10, 8, 6, 4, ? 다음 수는?", visual: "10 → 8 → 6 → 4 → ?", answer: 2, choices: [1, 2, 3, 4] },
+      { id: "M17-4", type: "counting", prompt: "5, 10, 15, ? 다음 수는?", visual: "5 → 10 → 15 → ?", answer: 20, choices: [18, 19, 20, 25] },
+      { id: "M17-5", type: "counting", prompt: "🦖🦕🦖🦕🦖? 다음은?", visual: "🦖🦕🦖🦕🦖?", answer: "🦕", choices: ["🦖", "🦕", "🦁", "🐧"] },
+    ],
+  },
+  {
+    id: 18,
+    title: "모사사우루스의 짝수 홀수",
+    topic: "짝수와 홀수",
+    dino: "mosasaurus",
+    story: "모사사우루스가 바다 친구들을 짝지어 줘요!\n짝을 지을 수 있으면 짝수, 없으면 홀수!",
+    questions: [
+      { id: "M18-1", type: "counting", prompt: "4는 짝수일까 홀수일까?", visual: "🐟🐟 🐟🐟 → 짝지어짐!", answer: "짝수", choices: ["짝수", "홀수"] },
+      { id: "M18-2", type: "counting", prompt: "7은 짝수일까 홀수일까?", visual: "🐟🐟 🐟🐟 🐟🐟 🐟 → 하나 남음!", answer: "홀수", choices: ["짝수", "홀수"] },
+      { id: "M18-3", type: "counting", prompt: "10은 짝수일까 홀수일까?", visual: "🐟🐟 🐟🐟 🐟🐟 🐟🐟 🐟🐟", answer: "짝수", choices: ["짝수", "홀수"] },
+      { id: "M18-4", type: "counting", prompt: "13은 짝수일까 홀수일까?", visual: "13 → 짝? 홀?", answer: "홀수", choices: ["짝수", "홀수"] },
+      { id: "M18-5", type: "counting", prompt: "16은 짝수일까 홀수일까?", visual: "16 → 짝? 홀?", answer: "짝수", choices: ["짝수", "홀수"] },
+    ],
+  },
+
+  // ========== 19~20: 종합 ==========
+  {
+    id: 19,
+    title: "공룡 시장 놀이",
+    topic: "돈 세기 (10원, 50원, 100원)",
+    dino: "deinonychus",
+    story: "데이노니쿠스가 공룡 시장을 열었어요!\n동전을 세서 물건 값을 맞혀봐요.",
+    questions: [
+      { id: "M19-1", type: "addition", prompt: "10원 + 10원 + 10원 = ?", visual: "🪙🪙🪙", answer: 30, choices: [20, 30, 40, 50] },
+      { id: "M19-2", type: "addition", prompt: "50원 + 10원 = ?", visual: "🪙(50) + 🪙(10)", answer: 60, choices: [50, 60, 70, 80] },
+      { id: "M19-3", type: "addition", prompt: "100원 - 30원 = ? (거스름돈)", visual: "💰100 - 30", answer: 70, choices: [60, 70, 80, 90] },
+      { id: "M19-4", type: "addition", prompt: "10원 5개 = ?", visual: "🪙🪙🪙🪙🪙", answer: 50, choices: [40, 50, 60, 70] },
+      { id: "M19-5", type: "subtraction", prompt: "100원 - 50원 = ?", visual: "💰100 - 🪙50", answer: 50, choices: [30, 40, 50, 60] },
+    ],
+  },
+  {
+    id: 20,
+    title: "공룡 박사 최종 시험",
+    topic: "종합 복습",
+    dino: "giganotosaurus",
+    story: "기가노토사우루스 박사가 마지막 시험을 내요!\n지금까지 배운 걸 총동원하자!",
+    questions: [
+      { id: "M20-1", type: "addition", prompt: "7 + 8 = ?", visual: "🦖×7 + 🦖×8", answer: 15, choices: [13, 14, 15, 16] },
+      { id: "M20-2", type: "subtraction", prompt: "16 - 9 = ?", visual: "⭐×16 - 9", answer: 7, choices: [5, 6, 7, 8] },
+      { id: "M20-3", type: "shape", prompt: "축구공은 어떤 모양?", visual: "⚽", answer: "동그라미", choices: ["동그라미", "세모", "네모", "별"] },
+      { id: "M20-4", type: "counting", prompt: "3, 6, 9, ? 다음 수는?", visual: "3 → 6 → 9 → ?", answer: 12, choices: [10, 11, 12, 13] },
+      { id: "M20-5", type: "compare", prompt: "19와 15 중 어떤 수가 더 클까요?", visual: "19 vs 15", answer: 19, choices: [15, 19] },
     ],
   },
 ];

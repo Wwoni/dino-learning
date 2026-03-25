@@ -55,7 +55,7 @@ export default function WritingCanvas({ guideText, onComplete, lang = "ko" }: Pr
 
     // 가이드 글자 (연하게)
     ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
-    const fontSize = lang === "ko" ? Math.min(w / guideText.length, h * 0.7) : Math.min(w / guideText.length, h * 0.7);
+    const fontSize = Math.min(w / guideText.length, h * 0.7);
     ctx.font = `bold ${fontSize}px ${lang === "ko" ? "'Noto Sans KR', sans-serif" : "'Arial', sans-serif"}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
